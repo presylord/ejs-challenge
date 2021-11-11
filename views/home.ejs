@@ -2,8 +2,13 @@
 <h1>Home</h1>
 <p><%= homeStartingContent %></p>
 
-<% for (var x=0; x<posts.length; x++){ %>
-  <h1><%= posts[x].newPostTitle %></h1>
-  <p><%= posts[x].newPostBody %></p>
-  <%}%> <%- include("partials/footer") -%>
-</posts.length;>
+<% posts.forEach(function(post){ %>
+<h1><%= post.postTitle;%></h1>
+<p>
+  <%= _.truncate(post.postBody,{'length':100, separator: ' '}); %>
+
+  <a href="/posts/<%=_.kebabCase(post.postTitle)%>">Read More</a>
+
+  <% }); %>
+</p>
+<%-include("partials/footer") -%>

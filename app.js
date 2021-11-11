@@ -11,6 +11,8 @@ const contactContent =
   "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
 
 const app = express();
+var _ = require("lodash");
+var posts = [];
 
 var posts = [];
 
@@ -19,9 +21,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
+  console.log(posts);
   res.render("home", {
     homeStartingContent: homeStartingContent,
     posts: posts,
+    _: _,
   });
 });
 app.get("/about", function (req, res) {
@@ -36,11 +40,26 @@ app.get("/compose", function (req, res) {
 });
 app.post("/compose", function (req, res) {
   const post = {
-    newPostTitle: req.body.postTitle,
-    newPostBody: req.body.postBody,
+    postTitle: req.body.postTitle,
+    postBody: req.body.postBody,
   };
   posts.push(post);
   res.redirect("/");
+});
+
+app.get("/posts/:title", function (req, res) {
+  const reqTitle = _.kebabCase(req.params.title);
+
+  posts.forEach(function (post) {
+    const storedTitle = _.kebabCase(post.postTitle);
+
+    if (storedTitle === reqTitle) {
+      res.render("post", {
+        Title: post.postTitle,
+        Body: post.postBody,
+      });
+    }
+  });
 });
 
 app.listen(3000, function () {
