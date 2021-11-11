@@ -19,9 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
+  console.log(posts);
   res.render("home", {
     homeStartingContent: homeStartingContent,
     posts: posts,
+    _: _,
   });
 });
 app.get("/about", function (req, res) {
@@ -44,9 +46,10 @@ app.post("/compose", function (req, res) {
 });
 
 app.get("/posts/:title", function (req, res) {
-  const reqTitle = _.lowerCase(req.params.title);
+  const reqTitle = _.kebabCase(req.params.title);
+  console.log(reqTitle);
   posts.forEach(function (post) {
-    const storedTitle = _.lowerCase(post.postTitle);
+    const storedTitle = _.kebabCase(post.postTitle);
     if (storedTitle === reqTitle) {
       res.render("post", {
         Title: post.postTitle,
