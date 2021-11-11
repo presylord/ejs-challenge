@@ -47,18 +47,14 @@ app.post("/compose", function (req, res) {
 
 app.get("/posts/:title", function (req, res) {
   const reqTitle = _.kebabCase(req.params.title);
-  console.log(reqTitle);
+
   posts.forEach(function (post) {
     const storedTitle = _.kebabCase(post.postTitle);
+
     if (storedTitle === reqTitle) {
       res.render("post", {
         Title: post.postTitle,
         Body: post.postBody,
-      });
-    } else {
-      res.render("post", {
-        Title: "Post not found!",
-        Body: "",
       });
     }
   });
