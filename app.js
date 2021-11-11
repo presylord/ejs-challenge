@@ -12,12 +12,17 @@ const contactContent =
 
 const app = express();
 
+var posts = [];
+
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
-  res.render("home", { homeStartingContent: homeStartingContent });
+  res.render("home", {
+    homeStartingContent: homeStartingContent,
+    posts: posts,
+  });
 });
 app.get("/about", function (req, res) {
   res.render("about", { aboutContent: aboutContent });
@@ -30,7 +35,12 @@ app.get("/compose", function (req, res) {
   res.render("compose");
 });
 app.post("/compose", function (req, res) {
-  console.log(req.body.newEntry);
+  const post = {
+    newPostTitle: req.body.postTitle,
+    newPostBody: req.body.postBody,
+  };
+  posts.push(post);
+  res.redirect("/");
 });
 
 app.listen(3000, function () {
